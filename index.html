@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>互动视频</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #000;
+    }
+
+    #container {
+      position: relative;
+      width: 360px;
+      height: 640px;
+    }
+
+    #video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #options {
+      position: absolute;
+      bottom: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+      flex-direction: column;
+      gap: 15px;
+      z-index: 10;
+      width: 90%;
+    }
+
+    #options.show {
+      display: flex;
+    }
+
+    .btn {
+      padding: 16px 24px;
+      font-size: 15px;
+      color: #fff;
+      background: rgba(0, 0, 0, 0.75);
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-radius: 50px;
+      cursor: pointer;
+      text-align: center;
+      width: 100%;
+    }
+
+    #playBtn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.6);
+      border: 3px solid rgba(255, 255, 255, 0.8);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+
+    #playBtn::after {
+      content: '';
+      width: 0;
+      height: 0;
+      border-top: 18px solid transparent;
+      border-bottom: 18px solid transparent;
+      border-left: 30px solid #fff;
+      margin-left: 5px;
+    }
+
+    #playBtn.hide {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div id="container">
+    <video id="video" playsinline webkit-playsinline></video>
+    <button id="playBtn"></button>
+    <div id="options">
+      <button class="btn" data-option="a">曾连夜刷完50集狗血综艺只为出个锐评贴 📝</button>
+      <button class="btn" data-option="b">手机里存了超过10个G的明星塌房表情包 📁</button>
+      <button class="btn" data-option="c">其实私底下是个一看虐恋剧就哭的纯爱战神 😭</button>
+    </div>
+  </div>
+
+  <script>
+    const video = document.getElementById('video');
+    const options = document.getElementById('options');
+    const buttons = document.querySelectorAll('.btn');
+    const playBtn = document.getElementById('playBtn');
+
+    const videos = {
+      main: 'videos/main.mp4',
+      a: 'videos/option_a.mp4',
+      b: 'videos/option_b.mp4',
+      c: 'videos/option_c.mp4'
+    };
+
+    let isMainVideo = true;
+
+    function playVideo(src) {
+      video.src = src;
+      video.load();
+      video.play();
+    }
+
+    function showOptions() {
+      video.pause();
+      options.classList.add('show');
+    }
+
+    function hideOptions() {
+      options.classList.remove('show');
+    }
+
+    playBtn.addEventListener('click', () => {
+      playBtn.classList.add('hide');
+      playVideo(videos.main);
+    });
+
+    video.addEventListener('timeupdate', () => {
+      if (isMainVideo && video.duration - video.currentTime <= 2) {
+        showOptions();
+      }
+    });
+
+    video.addEventListener('ended', () => {
+      if (!isMainVideo) {
+        isMainVideo = true;
+        playVideo(videos.main);
+      }
+    });
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const option = btn.getAttribute('data-option');
+        hideOptions();
+        isMainVideo = false;
+        playVideo(videos[option]);
+      });
+    });
+  </script>
+</body>
+</html>
