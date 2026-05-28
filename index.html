@@ -120,11 +120,20 @@
     };
 
     let isMainVideo = true;
+    let currentSrc = videos.main;
 
-    function playVideo(src) {
+    function loadVideo(src) {
       video.src = src;
       video.load();
-      video.play();
+      currentSrc = src;
+    }
+
+    function showPlayBtn() {
+      playBtn.classList.remove('hide');
+    }
+
+    function hidePlayBtn() {
+      playBtn.classList.add('hide');
     }
 
     function showOptions() {
@@ -137,8 +146,9 @@
     }
 
     playBtn.addEventListener('click', () => {
-      playBtn.classList.add('hide');
-      playVideo(videos.main);
+      hidePlayBtn();
+      hideOptions();
+      video.play();
     });
 
     video.addEventListener('timeupdate', () => {
@@ -148,10 +158,7 @@
     });
 
     video.addEventListener('ended', () => {
-      if (!isMainVideo) {
-        isMainVideo = true;
-        playVideo(videos.main);
-      }
+      showPlayBtn();
     });
 
     buttons.forEach(btn => {
@@ -159,9 +166,13 @@
         const option = btn.getAttribute('data-option');
         hideOptions();
         isMainVideo = false;
-        playVideo(videos[option]);
+        loadVideo(videos[option]);
+        video.play();
       });
     });
+
+    // 初始化加载主视频，显示第一帧
+    loadVideo(videos.main);
   </script>
 </body>
 </html>
