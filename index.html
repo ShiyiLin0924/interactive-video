@@ -93,7 +93,11 @@
 </head>
 <body>
   <div id="container">
-    <video id="video" playsinline webkit-playsinline></video>
+    <video id="video" playsinline webkit-playsinline preload="auto"></video>
+    <!-- 预加载分支视频 -->
+    <video id="preloadA" src="videos/option_a.mp4" preload="auto" style="display:none;"></video>
+    <video id="preloadB" src="videos/option_b.mp4" preload="auto" style="display:none;"></video>
+    <video id="preloadC" src="videos/option_c.mp4" preload="auto" style="display:none;"></video>
     <button id="playBtn"></button>
     <div id="options">
       <button class="btn" data-option="a">曾连夜刷完50集狗血综艺只为出个锐评贴 📝</button>
